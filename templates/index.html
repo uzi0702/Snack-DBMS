@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お菓子管理</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body>
+    <div class="container">
+        <h1>操作フォーム</h1>
+        <form id="data-form" action="/submit" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="column1">名前:</label>
+                <input type="text" id="column1" name="column1" required>
+            </div>
+            <div class="form-group">
+                <label for="column2">所有者:</label>
+                <input type="text" id="column2" name="column2" required>
+            </div>
+            <div class="form-group">
+                <label for="column3">他人の食可否(可能であれば一人当たりの個数入力):</label>
+                <input type="text" id="column3" name="column3" required>
+            </div>
+            <div class="form-group">
+                <label for="image">画像:</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            <button type="submit">行を追加</button>
+        </form>
+
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>列1</th>
+                    <th>列2</th>
+                    <th>列3</th>
+                    <th>画像</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for snack in snacks %}
+                <tr>
+                    <td>{{ snack.name }}</td>
+                    <td>{{ snack.owner }}</td>
+                    <td>{{ snack.eatable }}</td>
+                    <td>
+                        {% if snack.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ snack.image) }}" alt="{{ snack.name }}" width="100">
+                        {% else %}
+                        画像なし
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('delete_snack')}}" method="POST" style="display:inline;" >
+                            <input type="hidden" name="snack_id" value="{{ snack.id }}">
+                            <button type="submit">削除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
