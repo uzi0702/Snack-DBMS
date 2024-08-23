@@ -2,8 +2,8 @@ PYTHON = python
 PYDOC  = pydoc 
 PYLINT  = pylint
 WROKDIR =  ./
-TARGET = test.py
-MODULE = test
+TARGET = my_app.py
+MODULE = my_app
 PYCS = $(shell find . -name "*.pyc")
 PYCACHE	= $(shell find . -name "__pycache__")
 LINTRST	= pylintresult.txt
@@ -12,6 +12,8 @@ ARCHIVE	= $(shell basename `pwd`)
 UPLOAD_DIR="static/uploads"
 ALL_PROGRAM = $(shell find . -name "*.py")
 
+gunicorn:
+	gunicorn -w 4 'my_app:app'
 
 test:
 	flask --app $(MODULE) --debug run
@@ -24,7 +26,7 @@ clean:
 	@for each in ${PYCS} ; do echo "rm -f $${each}" ; rm -f $${each} ; done
 	@for each in ${PYCACHE} ; do echo "rm -f $${each}" ; rm -rf $${each} ; done
 	@if [ -e $(LINTRST) ] ; then echo "rm -f $(LINTRST)" ; rm -f $(LINTRST) ; fi
-	@if [ -e ${MODULE}.db ] ; then rm -f ${MODULE}.db ; fi
+	@if [ -e test.db ] ; then rm -f test.db ; fi
 	@find . -name ".DS_Store" -exec rm {} ";" -exec echo rm -f {} ";"
 	@xattr -cr ./
 

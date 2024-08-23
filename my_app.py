@@ -5,6 +5,7 @@ __author__ = 'terauchihiroki'
 __version__ = '1.0.0'
 __date__ = '20XX/XX/XX (Created: 2024/08/16)'
 
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from table import SnackTable
 import table
@@ -38,7 +39,8 @@ def submit():
     image = request.files['image']
 
     if image:
-        image_path = f"static/uploads/{image.filename}"
+        image_path = os.path.join("static", "uploads", image.filename)
+        print(f"image_path:::::::::::::{image_path}")
         image.save(image_path)
     insert_data(name,owner,eatbale,image.filename)
 
@@ -49,9 +51,15 @@ def delete_snack():
     snack_id = request.form['snack_id']
     snack_to_delete = a_session.query(SnackTable).get(snack_id)
     if snack_to_delete:
+        image_file = snack_to_delete.image
         a_session.delete(snack_to_delete)
         a_session.commit()
-    
+
+        if image_file:
+            image_path = os.path.join(os.getcwd(), "static", "uploads", image_file)
+            print(f"image_file -------- delete {image_path}")
+            if os.path.isfile(image_path):
+                os.remove(image_path)
     a_session.close()
     return redirect(url_for('index'))
 
@@ -83,6 +91,6 @@ def view_all_record():
     return
 
 if __name__ == '__main__':
-    view_all_record()
-    app.run(debug=True)
+    from werkzeug.serving import run_simple
+    run_simple('127.0.0.1', 8000, app)
     
