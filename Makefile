@@ -13,7 +13,7 @@ UPLOAD_DIR="static/uploads"
 ALL_PROGRAM = $(shell find . -name "*.py")
 
 gunicorn:
-	gunicorn -w 4 'my_app:app'
+	gunicorn -w 4 -b 0.0.0.0:5000 'my_app:app'
 
 test:
 	flask --app $(MODULE) --debug run

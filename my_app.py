@@ -91,6 +91,5 @@ def view_all_record():
     return
 
 if __name__ == '__main__':
-    from werkzeug.serving import run_simple
-    run_simple('127.0.0.1', 8000, app)
+    app.run()
     
